@@ -1,4 +1,4 @@
-# Répare les conneries d'encodage de PS
+﻿# Répare les conneries d'encodage de PS
 $PSDefaultParameterValues['Out-Host:Encoding'] = 'utf8'
 $PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
 $PSDefaultParameterValues['Get-Content:Encoding'] = 'utf8'
@@ -15,7 +15,7 @@ $sourceSelection = $true
 
 while ($sourceSelection) {
     # Selection d'un path ou vide pour parcours de la racine du script
-    $selectSource = Read-Host "Veuillez saisir le chemin de la playlist au format .m3u8 (laisser vide si dans le même dossier que ce script) "
+    $selectSource = Read-Host "Veuillez saisir le chemin de la playlist au format .m3u8 (laisser vide si dans le même dossier que ce script)"
     
     # Si source renseignée n'est pas vide
     #   Vérifie si le path est correct, sinon
