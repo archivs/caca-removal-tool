@@ -54,16 +54,8 @@ while ($sourceSelection) {
     }
 }
 
-
-
-
-
-
-# Définit l'adresse de la playlist source
-# $playlistSource = "C:\Data\Code\caca-removal-tool\data\Caca.m3u8"
-
 # Stocke toutes les adresses dans fileList
-$fileList = Get-Content $playlistSource | Where-Object { $_ -like "C:\*" }
+$fileList = Get-Content $playlistSource | Where-Object { $_ -like "[A-Z]:\*" }
 
 # Vérifie l'existance de chaque fichier de la liste fileList
 $listFound = @()
@@ -81,13 +73,15 @@ foreach ($file in $fileList) {
 $nbFilesFound = $listFound.Count
 $nbFilesTotal = $nbFilesFound + $listNotFound.Count
 
+# Indique les fichiers trouvés
+# Enregistre les fichiers non trouvés dans un document à la racine
 Write-Host -ForegroundColor Green "Files found : $nbFilesFound/$nbFilesTotal."
 foreach ($file in $listNotFound) {
     Write-Host -ForegroundColor Red $file
 }
 $listNotFound | Out-File -FilePath "files_not_found.txt"
 
-
+# Demande une confirmation avant la suppression
 $deleteConfirm = Read-Host "Supprimer $nbFilesFound fichiers ? (Y/N)"
 if ($deleteConfirm -eq "Y" -or $deleteConfirm -eq "y") {
     Write-Host -ForegroundColor Green "Fichiers supprimés."
@@ -95,6 +89,17 @@ if ($deleteConfirm -eq "Y" -or $deleteConfirm -eq "y") {
 else {
     Write-Host -ForegroundColor Green "0 fichiers ont été supprimés."
 }
-# foreach ($file in $listFound) {
-#     # Remove-Item -Path file
-# }
+
+# Suppression
+$deletedFilesNb = 0
+foreach ($file in $listFound) {
+    try {
+        Remove-Item -Path $file -ErrorAction Stop
+        $deletedFilesNb ++
+        Write-Host "Le fichier $file a été supprimé avec succès."
+    } catch {
+        Write-Host "Impossible de supprimer le fichier $file : $_"
+    }
+}
+Write-Host -ForegroundColor Green "$deletedFilesNb ont été supprimés avec succès."
+
